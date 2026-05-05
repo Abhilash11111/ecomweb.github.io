@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - EcomWeb</title>
+  <link rel="icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+
+  <div class="container">
+    <div class="breadcrumbs">
+      <a href="index.html">Home</a> <span>&#8250;</span> Products
+    </div>
+
+    <div class="filter-bar">
+      <div class="filters">
+        <button class="filter-btn active" data-cat="all">All</button>
+        <button class="filter-btn" data-cat="electronics">Electronics</button>
+        <button class="filter-btn" data-cat="fashion">Fashion</button>
+        <button class="filter-btn" data-cat="home">Home & Living</button>
+        <button class="filter-btn" data-cat="sports">Sports</button>
+        <button class="filter-btn" data-cat="food">Food & Drinks</button>
+      </div>
+      <div class="search-bar">
+        <span>&#128269;</span>
+        <input type="text" id="search-input" placeholder="Search products...">
+      </div>
+    </div>
+  </div>
+
+  <section class="products-section" style="padding-top: 0;">
+    <div class="container">
+      <div class="products-grid" id="all-products"></div>
+      <div id="no-results" style="display:none; text-align:center; padding:60px 20px;">
+        <div style="font-size:3rem;">&#128269;</div>
+        <h2>No products found</h2>
+        <p style="color:var(--gray);">Try a different search or category</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('header').innerHTML = getHeader();
+    document.getElementById('footer').innerHTML = getFooter();
+    cart.updateCartCount();
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function renderProducts() {
+      let filtered = products;
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategory);
+      }
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q)
+        );
+      }
+
+      const grid = document.getElementById('all-products');
+      const noResults = document.getElementById('no-results');
+
+      if (filtered.length === 0) {
+        grid.style.display = 'none';
+        noResults.style.display = 'block';
+      } else {
+        grid.style.display = 'grid';
+        noResults.style.display = 'none';
+        grid.innerHTML = filtered.map(p => createProductCard(p)).join('');
+      }
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.cat;
+        renderProducts();
+      });
+    });
+
+    // Search
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      renderProducts();
+    });
+
+    // Check URL params for category filter
+    const urlParams = new URLSearchParams(window.location.search);
+    const catParam = urlParams.get('cat');
+    if (catParam) {
+      currentCategory = catParam;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.cat === catParam);
+      });
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>

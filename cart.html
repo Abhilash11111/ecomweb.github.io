@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - EcomWeb</title>
+  <link rel="icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+
+  <section class="cart-section">
+    <div class="container">
+      <div class="cart-header">
+        <h1>Shopping Cart</h1>
+      </div>
+      <div id="cart-content"></div>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('header').innerHTML = getHeader();
+    document.getElementById('footer').innerHTML = getFooter();
+    cart.updateCartCount();
+
+    function renderCart() {
+      const container = document.getElementById('cart-content');
+
+      if (cart.items.length === 0) {
+        container.innerHTML = `
+          <div class="cart-empty">
+            <div class="icon">&#128722;</div>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything to your cart yet.</p>
+            <a href="products.html" class="btn btn-primary">Start Shopping</a>
+          </div>`;
+        return;
+      }
+
+      const subtotal = cart.getTotal();
+      const shipping = subtotal > 50 ? 0 : 9.99;
+      const tax = subtotal * 0.08;
+      const total = subtotal + shipping + tax;
+
+      const itemsHtml = cart.items.map(item => `
+        <div class="cart-item">
+          <div class="cart-item-image">
+            <img src="${item.image}" alt="${item.name}">
+          </div>
+          <div class="cart-item-details">
+            <h3>${item.name}</h3>
+            <div class="price">$${item.price.toFixed(2)}</div>
+            <div class="cart-item-qty">
+              <button onclick="updateQty(${item.id}, ${item.quantity - 1})">-</button>
+              <span>${item.quantity}</span>
+              <button onclick="updateQty(${item.id}, ${item.quantity + 1})">+</button>
+            </div>
+          </div>
+          <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Remove">
+            &#10005;
+          </button>
+        </div>`).join('');
+
+      container.innerHTML = `
+        <div class="cart-layout">
+          <div class="cart-items">${itemsHtml}</div>
+          <div class="cart-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-row">
+              <span>Subtotal (${cart.getItemCount()} items)</span>
+              <span>$${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>${shipping === 0 ? 'Free' : '$' + shipping.toFixed(2)}</span>
+            </div>
+            <div class="summary-row">
+              <span>Tax</span>
+              <span>$${tax.toFixed(2)}</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total</span>
+              <span>$${total.toFixed(2)}</span>
+            </div>
+            <button class="btn btn-primary" onclick="checkout()">Proceed to Checkout</button>
+            <a href="products.html" class="btn btn-secondary" style="width:100%;margin-top:8px;display:block;">
+              Continue Shopping
+            </a>
+          </div>
+        </div>`;
+    }
+
+    function updateQty(id, qty) {
+      if (qty < 1) {
+        removeFromCart(id);
+        return;
+      }
+      cart.updateQuantity(id, qty);
+      renderCart();
+    }
+
+    function removeFromCart(id) {
+      cart.removeItem(id);
+      renderCart();
+      showToast('Item removed from cart');
+    }
+
+    function checkout() {
+      showToast('Thank you for your order! This is a demo checkout.');
+      cart.clear();
+      setTimeout(() => renderCart(), 1000);
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
