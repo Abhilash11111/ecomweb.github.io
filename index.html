@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcomWeb - Your One-Stop Online Shop</title>
+  <link rel="icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="header"></div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Discover Amazing Products</h1>
+      <p>Shop the latest trends with unbeatable prices and fast delivery. Your satisfaction is our priority.</p>
+      <a href="products.html" class="hero-btn">Shop Now &#8594;</a>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories">
+    <div class="container">
+      <div class="section-title">
+        <h2>Shop by Category</h2>
+        <p>Browse our wide range of categories</p>
+      </div>
+      <div class="categories-grid">
+        <a href="products.html?cat=electronics" class="category-card">
+          <div class="icon">&#128187;</div>
+          <h3>Electronics</h3>
+          <p>Gadgets & Tech</p>
+        </a>
+        <a href="products.html?cat=fashion" class="category-card">
+          <div class="icon">&#128084;</div>
+          <h3>Fashion</h3>
+          <p>Clothing & Accessories</p>
+        </a>
+        <a href="products.html?cat=home" class="category-card">
+          <div class="icon">&#127968;</div>
+          <h3>Home & Living</h3>
+          <p>Decor & Essentials</p>
+        </a>
+        <a href="products.html?cat=sports" class="category-card">
+          <div class="icon">&#9917;</div>
+          <h3>Sports</h3>
+          <p>Fitness & Outdoors</p>
+        </a>
+        <a href="products.html?cat=food" class="category-card">
+          <div class="icon">&#127869;</div>
+          <h3>Food & Drinks</h3>
+          <p>Gourmet & Organic</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="products-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Featured Products</h2>
+        <p>Handpicked products just for you</p>
+      </div>
+      <div class="products-grid" id="featured-products"></div>
+      <div style="text-align:center; margin-top:40px;">
+        <a href="products.html" class="btn btn-primary">View All Products &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="icon">&#128666;</div>
+          <h3>Free Shipping</h3>
+          <p>Free shipping on all orders over $50</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128274;</div>
+          <h3>Secure Payment</h3>
+          <p>100% secure payment processing</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128259;</div>
+          <h3>Easy Returns</h3>
+          <p>30-day hassle-free return policy</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">&#128222;</div>
+          <h3>24/7 Support</h3>
+          <p>Round-the-clock customer support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter">
+    <div class="container">
+      <h2>Stay in the Loop</h2>
+      <p>Subscribe to our newsletter for exclusive deals and updates</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); showToast('Thanks for subscribing!');">
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById('header').innerHTML = getHeader();
+    document.getElementById('footer').innerHTML = getFooter();
+
+    // Render featured products (first 8)
+    const featured = products.slice(0, 8);
+    document.getElementById('featured-products').innerHTML =
+      featured.map(p => createProductCard(p)).join('');
+  </script>
+</body>
+</html>
