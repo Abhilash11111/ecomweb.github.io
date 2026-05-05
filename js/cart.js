@@ -64,6 +64,7 @@ class Cart {
 
 const cart = new Cart();
 
+let toastTimeout;
 function showToast(message) {
   let toast = document.querySelector('.toast');
   if (!toast) {
@@ -73,7 +74,8 @@ function showToast(message) {
   }
   toast.textContent = message;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
 function renderStars(rating) {
